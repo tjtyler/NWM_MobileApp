@@ -15,6 +15,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
   List rivers = [];
   List filteredRivers = [];
   Icon _searchIcon = Icon(Icons.search);
+  Icon _backArrow = Icon(Icons.arrow_back);
   Widget _appBarTitle = Text('River Forecast');
   late GoogleMapController mapController;
 
@@ -39,6 +40,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
         target: center,
         zoom: 11.0,
       ),
+      mapType: MapType.terrain,
     );
   }
 
@@ -47,9 +49,12 @@ class _MyMapScreenState extends State<MyMapScreen> {
       centerTitle: true,
       title: _appBarTitle,
       leading: IconButton(
-        icon: _searchIcon,
-        onPressed: _searchPressed,
+        icon: _backArrow,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
+      actions: [IconButton(icon: _searchIcon, onPressed: _searchPressed)],
       backgroundColor: Color.fromARGB(255, 133, 85, 136),
     );
   }
