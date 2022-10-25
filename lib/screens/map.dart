@@ -19,7 +19,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
   Widget _appBarTitle = Text('River Forecast');
   late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(41.521563, -111.677433);
+  final LatLng _center = const LatLng(40.2673, -111.6407);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
