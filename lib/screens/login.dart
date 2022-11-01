@@ -100,7 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyMapScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const MyMapScreen()),
                       );
                     })
               ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:dio/dio.dart';
+import 'search.dart';
 
 class MyMapScreen extends StatefulWidget {
   const MyMapScreen({super.key});
@@ -11,12 +11,11 @@ class MyMapScreen extends StatefulWidget {
 
 class _MyMapScreenState extends State<MyMapScreen> {
   final TextEditingController _filter = TextEditingController();
-  String _searchText = "";
   List rivers = [];
   List filteredRivers = [];
-  Icon _searchIcon = Icon(Icons.search);
-  Icon _backArrow = Icon(Icons.arrow_back);
-  Widget _appBarTitle = Text('River Forecast');
+  Icon _searchIcon = const Icon(Icons.search);
+  final _backArrow = const Icon(Icons.arrow_back);
+  Widget _appBarTitle = const Text('River Forecast');
   late GoogleMapController mapController;
 
   final LatLng _center = const LatLng(40.2673, -111.6407);
@@ -55,31 +54,36 @@ class _MyMapScreenState extends State<MyMapScreen> {
         },
       ),
       actions: [IconButton(icon: _searchIcon, onPressed: _searchPressed)],
-      backgroundColor: Color.fromARGB(255, 133, 85, 136),
+      backgroundColor: const Color.fromARGB(255, 133, 85, 136),
     );
   }
 
   void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = Icon(Icons.close);
-        this._appBarTitle = TextField(
-          controller: _filter,
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search, color: Colors.white),
-            hintText: 'Search...',
-            hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-          ),
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        );
-      } else {
-        this._searchIcon = Icon(Icons.search);
-        this._appBarTitle = Text('River Forecasts');
-        filteredRivers = rivers;
-        _filter.clear();
-      }
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchScreen()),
+    );
   }
+  // setState(() {
+  //   if (_searchIcon.icon == Icons.search) {
+  //     _searchIcon = const Icon(Icons.close);
+  //     _appBarTitle = TextField(
+  //       controller: _filter,
+  //       decoration: const InputDecoration(
+  //         prefixIcon: Icon(Icons.search, color: Colors.white),
+  //         hintText: 'Search...',
+  //         hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+  //       ),
+  //       style: const TextStyle(
+  //         color: Colors.white,
+  //       ),
+  //     );
+  //   } else {
+  //     _searchIcon = const Icon(Icons.search);
+  //     _appBarTitle = const Text('River Forecasts');
+  //     filteredRivers = rivers;
+  //     _filter.clear();
+  //   }
+  // });
+  // }
 }
