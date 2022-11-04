@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nwm_river_forecast/location_services.dart';
 import 'search.dart';
 
 class MyMapScreen extends StatefulWidget {
@@ -10,37 +13,59 @@ class MyMapScreen extends StatefulWidget {
 }
 
 class _MyMapScreenState extends State<MyMapScreen> {
-  final TextEditingController _filter = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List rivers = [];
   List filteredRivers = [];
-  Icon _searchIcon = const Icon(Icons.search);
+  final Icon _searchIcon = const Icon(Icons.search);
   final _backArrow = const Icon(Icons.arrow_back);
-  Widget _appBarTitle = const Text('River Forecast');
-  late GoogleMapController mapController;
+  final _appBarTitle = const Text('River Forecast');
+  final Completer<GoogleMapController> _controller = Completer();
 
   final LatLng _center = const LatLng(40.2673, -111.6407);
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildBar(context),
-      body: Container(child: _googleMap(_center)),
-    );
+        appBar: _buildBar(context),
+        body: Column(
+          children: [_searchBar(), _googleMap(_center)],
+        ));
   }
 
   Widget _googleMap(center) {
-    return GoogleMap(
-      onMapCreated: _onMapCreated,
+    return Expanded(
+        child: GoogleMap(
       initialCameraPosition: CameraPosition(
         target: center,
         zoom: 11.0,
       ),
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
       mapType: MapType.terrain,
-    );
+    ));
+  }
+
+  Widget _searchBar() {
+    return Row(children: [
+      Expanded(
+        child: TextFormField(
+          controller: _searchController,
+          textCapitalization: TextCapitalization.words,
+          decoration: const InputDecoration(hintText: 'Search by City'),
+          onChanged: (value) {
+            print(value);
+          },
+        ),
+      ),
+      IconButton(
+          onPressed: () async {
+            var place =
+                await LocationService().getPlace(_searchController.text);
+            _goToPlace(place);
+          },
+          icon: _searchIcon)
+    ]);
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {
@@ -64,26 +89,14 @@ class _MyMapScreenState extends State<MyMapScreen> {
       MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
-  // setState(() {
-  //   if (_searchIcon.icon == Icons.search) {
-  //     _searchIcon = const Icon(Icons.close);
-  //     _appBarTitle = TextField(
-  //       controller: _filter,
-  //       decoration: const InputDecoration(
-  //         prefixIcon: Icon(Icons.search, color: Colors.white),
-  //         hintText: 'Search...',
-  //         hintStyle: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-  //       ),
-  //       style: const TextStyle(
-  //         color: Colors.white,
-  //       ),
-  //     );
-  //   } else {
-  //     _searchIcon = const Icon(Icons.search);
-  //     _appBarTitle = const Text('River Forecasts');
-  //     filteredRivers = rivers;
-  //     _filter.clear();
-  //   }
-  // });
-  // }
+
+  Future<void> _goToPlace(Map<String, dynamic> place) async {
+    final double lat = place['geometry']['location']['lat'];
+    final double lng = place['geometry']['location']['lng'];
+
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: LatLng(lat, lng), zoom: 12),
+    ));
+  }
 }
