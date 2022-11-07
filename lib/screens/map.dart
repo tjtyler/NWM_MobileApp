@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nwm_river_forecast/location_services.dart';
-import 'search.dart';
+
+// https://www.youtube.com/watch?v=tfFByL7F-00&t=1106s
 
 class MyMapScreen extends StatefulWidget {
   const MyMapScreen({super.key});
@@ -47,25 +47,30 @@ class _MyMapScreenState extends State<MyMapScreen> {
   }
 
   Widget _searchBar() {
-    return Row(children: [
-      Expanded(
-        child: TextFormField(
-          controller: _searchController,
-          textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(hintText: 'Search by City'),
-          onChanged: (value) {
-            print(value);
-          },
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            controller: _searchController,
+            textCapitalization: TextCapitalization.words,
+            decoration: const InputDecoration(hintText: 'Search by City'),
+            onChanged: (value) async {
+              print(value);
+            },
+            onFieldSubmitted: (value) async {
+              _goToPlace(await LocationService().getPlace(value));
+            },
+          ),
         ),
-      ),
-      IconButton(
-          onPressed: () async {
-            var place =
-                await LocationService().getPlace(_searchController.text);
-            _goToPlace(place);
-          },
-          icon: _searchIcon)
-    ]);
+        IconButton(
+            onPressed: () async {
+              var place =
+                  await LocationService().getPlace(_searchController.text);
+              _goToPlace(place);
+            },
+            icon: _searchIcon)
+      ],
+    );
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {
@@ -78,15 +83,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
           Navigator.pop(context);
         },
       ),
-      actions: [IconButton(icon: _searchIcon, onPressed: _searchPressed)],
       backgroundColor: const Color.fromARGB(255, 133, 85, 136),
-    );
-  }
-
-  void _searchPressed() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SearchScreen()),
     );
   }
 
