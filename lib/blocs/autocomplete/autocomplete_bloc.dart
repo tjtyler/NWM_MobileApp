@@ -1,36 +1,44 @@
-
-
-
-
 import 'dart:async';
 
-import 'package:nwm_river_forecast/place_autocomplete.dart';
-import 'package:nwm_river_forecast/repositories/places/places_repository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import '../../models/place_autocomplete.dart';
+import '../../repositories/places/places_repository.dart';
 
+part 'autocomplete_event.dart';
+part 'autocomplete_state.dart';
 
 class AutocompleteBloc extends Bloc<AutocompleteEvent, AutocompleteState> {
   final PlacesRepository _placesRepository;
   StreamSubscription? _placesSubscription;
 
-  AutocomleteBloc({required PlacesRepository placesRepository}) 
-  : _placesRepository = placesRepository,
-    super(AutocompleteLoading());
-
-  @override 
-  Stream<AutocompleteState> mapEventToState(
-    AutocompleteEvent event,
-  ) async* {
-    if (event is LoadAutocomplete) {
-      yield* _mapLoadAutocompleteToState(event);
-    }
+  AutocompleteBloc({required PlacesRepository placesRepository})
+      : _placesRepository = placesRepository,
+        super(AutocompleteLoading()) {
+    on<LoadAutocomplete>(_onLoadAutocomplete);
+    on<ClearAutocomplete>(_onClearAutocomplete);
   }
 
-  Stream<AutocompleteState> _mapLoadAutocompleteToState(
-    LoadAutocomplete event) async* {
-      _placesSubscription?.cancel();
+  void _onLoadAutocomplete(
+    LoadAutocomplete event,
+    Emitter<AutocompleteState> emit,
+  ) async {
+    final List<PlaceAutocomplete> autocomplete =
+        await _placesRepository.getAutocomplete(event.searchInput);
 
-      final List<PlaceAutocomplete> autocomplete = await _placesRepository.getAutocomplete(event.searchInput);
+    emit(AutocompleteLoaded(autocomplete: autocomplete));
+  }
 
-      yield AutocompleteLoaded(autocomplete: autocomplete);
-    }
+  void _onClearAutocomplete(
+    ClearAutocomplete event,
+    Emitter<AutocompleteState> emit,
+  ) async {
+    emit(AutocompleteLoaded(autocomplete: List.empty()));
+  }
+
+  @override
+  Future<void> close() async {
+    _placesSubscription?.cancel();
+    super.close();
+  }
 }

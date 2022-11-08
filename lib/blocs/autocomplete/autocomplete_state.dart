@@ -1,11 +1,9 @@
 part of 'autocomplete_bloc.dart';
 
-import 'dart:html';
-
 abstract class AutocompleteState extends Equatable {
   const AutocompleteState();
 
-  @override 
+  @override
   List<Object> get props => [];
 }
 
@@ -16,7 +14,7 @@ class AutocompleteLoaded extends AutocompleteState {
 
   const AutocompleteLoaded({required this.autocomplete});
 
-  @override 
+  @override
   List<Object> get props => [autocomplete];
 }
 
