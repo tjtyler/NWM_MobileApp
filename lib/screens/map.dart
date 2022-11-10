@@ -35,33 +35,21 @@ class _MyMapScreenState extends State<MyMapScreen> {
   final LatLng _center = const LatLng(40.2673, -111.6407);
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
-    _searchController.addListener(() {
-      _onChanged();
-    });
+    // _searchController.addListener(() {
+    //   _onChanged();
+    // });
   }
 
-  _onChanged() {
-    if (_sessionToken == null) {
-      setState(() {
-        _sessionToken = uuid.v4();
-        print('debug: sessionToken: ' + _sessionToken);
-      });
-    }
-    getSuggestion(_searchController.text);
-  }
-
-  void getSuggestion(String input) async {
+  Future<void> getSuggestion(String input) async {
     String kPLACES_API_KEY = "AIzaSyAZbG9wTZbKpju3qk-rid9JlusNkfO2L2M";
     String type = '(regions)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY';
     var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
-      print('debug: line 60');
       setState(() {
         _placeList = json.decode(response.body)['predictions'];
       });
@@ -107,7 +95,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
             textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(hintText: 'Search by City'),
             onChanged: (value) async {
-              print(value);
+              getSuggestion(_searchController.text);
             },
             onFieldSubmitted: (value) async {
               _goToPlace(await LocationService().getPlace(value));
