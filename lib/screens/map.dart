@@ -2,6 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nwm_river_forecast/location_services.dart';
+import 'package:nwm_river_forecast/main.dart';
+import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// https://github.com/cmailoa/google_places_autocomplete/blob/master/main.dart
+// https://medium.com/@ch.a.andremailoa/your-own-flutter-google-places-autocomplete-3e60c0358280
 
 // https://www.youtube.com/watch?v=tfFByL7F-00&t=1106s
 
@@ -13,7 +20,11 @@ class MyMapScreen extends StatefulWidget {
 }
 
 class _MyMapScreenState extends State<MyMapScreen> {
-  final TextEditingController _searchController = TextEditingController();
+  var _searchController = TextEditingController();
+  var uuid = new Uuid();
+  late String _sessionToken;
+  List<dynamic> _placeList = [];
+
   List rivers = [];
   List filteredRivers = [];
   final Icon _searchIcon = const Icon(Icons.search);
@@ -24,11 +35,52 @@ class _MyMapScreenState extends State<MyMapScreen> {
   final LatLng _center = const LatLng(40.2673, -111.6407);
 
   @override
+  Future<void> initState() async {
+    super.initState();
+    _searchController.addListener(() {
+      _onChanged();
+    });
+  }
+
+  _onChanged() {
+    if (_sessionToken == null) {
+      setState(() {
+        _sessionToken = uuid.v4();
+        print('debug: sessionToken: ' + _sessionToken);
+      });
+    }
+    getSuggestion(_searchController.text);
+  }
+
+  void getSuggestion(String input) async {
+    String kPLACES_API_KEY = "AIzaSyAZbG9wTZbKpju3qk-rid9JlusNkfO2L2M";
+    String type = '(regions)';
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    var response = await http.get(Uri.parse(request));
+    if (response.statusCode == 200) {
+      print('debug: line 60');
+      setState(() {
+        _placeList = json.decode(response.body)['predictions'];
+      });
+    } else {
+      throw Exception('Failed to load predictions');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _buildBar(context),
         body: Column(
-          children: [_searchBar(), _googleMap(_center)],
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _searchBar(),
+            _placeListView(context),
+            _googleMap(_center)
+          ],
         ));
   }
 
@@ -70,6 +122,17 @@ class _MyMapScreenState extends State<MyMapScreen> {
             },
             icon: _searchIcon)
       ],
+    );
+  }
+
+  ListView _placeListView(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: _placeList.length,
+      itemBuilder: (context, index) {
+        return ListTile(title: Text(_placeList[index]["description"]));
+      },
     );
   }
 
