@@ -22,6 +22,7 @@ class MyMapScreen extends StatefulWidget {
 class _MyMapScreenState extends State<MyMapScreen> {
   var _searchController = TextEditingController();
   var uuid = new Uuid();
+  var _showSuggestions = true;
   late String _sessionToken;
   List<dynamic> _placeList = [];
 
@@ -98,7 +99,15 @@ class _MyMapScreenState extends State<MyMapScreen> {
               getSuggestion(_searchController.text);
             },
             onFieldSubmitted: (value) async {
+              setState(() {
+                _showSuggestions = false;
+              });
               _goToPlace(await LocationService().getPlace(value));
+            },
+            onTap: () => {
+              setState(() {
+                _showSuggestions = true;
+              })
             },
           ),
         ),
@@ -113,14 +122,21 @@ class _MyMapScreenState extends State<MyMapScreen> {
     );
   }
 
-  ListView _placeListView(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: _placeList.length,
-      itemBuilder: (context, index) {
-        return ListTile(title: Text(_placeList[index]["description"]));
-      },
+  Visibility _placeListView(BuildContext context) {
+    return Visibility(
+      visible: _showSuggestions,
+      child: ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: _placeList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(_placeList[index]["description"]),
+            onTap: () =>
+                {_searchController.text = _placeList[index]["description"]},
+          );
+        },
+      ),
     );
   }
 
