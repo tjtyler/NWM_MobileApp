@@ -44,11 +44,17 @@ class _MyMapScreenState extends State<MyMapScreen> {
   }
 
   Future<void> getSuggestion(String input) async {
+    setState(() {
+      _sessionToken ??= uuid.v4();
+    });
+    print("sessionToken: ");
+    print(_sessionToken);
     String kPLACES_API_KEY = "AIzaSyAZbG9wTZbKpju3qk-rid9JlusNkfO2L2M";
     String type = '(regions)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request = '$baseURL?input=$input&key=$kPLACES_API_KEY';
+    String request =
+        '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
     var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
       setState(() {
@@ -101,11 +107,13 @@ class _MyMapScreenState extends State<MyMapScreen> {
             onFieldSubmitted: (value) async {
               setState(() {
                 _showSuggestions = false;
+                _sessionToken = uuid.v4();
               });
               _goToPlace(await LocationService().getPlace(value));
             },
             onTap: () => {
               setState(() {
+                _sessionToken = uuid.v4();
                 _showSuggestions = true;
               })
             },
@@ -113,6 +121,9 @@ class _MyMapScreenState extends State<MyMapScreen> {
         ),
         IconButton(
             onPressed: () async {
+              setState(() {
+                _showSuggestions = false;
+              });
               var place =
                   await LocationService().getPlace(_searchController.text);
               _goToPlace(place);
