@@ -22,7 +22,7 @@ class MyMapScreen extends StatefulWidget {
 class _MyMapScreenState extends State<MyMapScreen> {
   var _searchController = TextEditingController();
   var uuid = new Uuid();
-  var _showSuggestions = true;
+  var _showSuggestions = false;
   late String _sessionToken;
   List<dynamic> _placeList = [];
 
@@ -47,8 +47,6 @@ class _MyMapScreenState extends State<MyMapScreen> {
     setState(() {
       _sessionToken ??= uuid.v4();
     });
-    print("sessionToken: ");
-    print(_sessionToken);
     String kPLACES_API_KEY = "AIzaSyAZbG9wTZbKpju3qk-rid9JlusNkfO2L2M";
     String type = '(regions)';
     String baseURL =
@@ -97,12 +95,21 @@ class _MyMapScreenState extends State<MyMapScreen> {
     return Row(
       children: [
         Expanded(
+            child: Container(
+          padding: const EdgeInsets.all(15),
           child: TextFormField(
             controller: _searchController,
             textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(hintText: 'Search by City'),
             onChanged: (value) async {
               getSuggestion(_searchController.text);
+              setState(() {
+                if (_searchController.text == "") {
+                  _showSuggestions = false;
+                } else {
+                  _showSuggestions = true;
+                }
+              });
             },
             onFieldSubmitted: (value) async {
               setState(() {
@@ -114,11 +121,10 @@ class _MyMapScreenState extends State<MyMapScreen> {
             onTap: () => {
               setState(() {
                 _sessionToken = uuid.v4();
-                _showSuggestions = true;
               })
             },
           ),
-        ),
+        )),
         IconButton(
             onPressed: () async {
               setState(() {
