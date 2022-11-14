@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nwm_river_forecast/location_services.dart';
 import 'package:nwm_river_forecast/main.dart';
+import 'package:nwm_river_forecast/screens/favorites.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -30,7 +31,8 @@ class _MyMapScreenState extends State<MyMapScreen> {
   List filteredRivers = [];
   final Icon _searchIcon = const Icon(Icons.search);
   final _backArrow = const Icon(Icons.arrow_back);
-  final _appBarTitle = const Text('River Forecast');
+  final Icon menuIcon = Icon(Icons.menu);
+  final _appBarTitle = const Text('River Search');
   final Completer<GoogleMapController> _controller = Completer();
 
   final LatLng _center = const LatLng(40.2673, -111.6407);
@@ -168,6 +170,16 @@ class _MyMapScreenState extends State<MyMapScreen> {
         },
       ),
       backgroundColor: const Color.fromARGB(255, 133, 85, 136),
+      actions: <Widget>[
+        IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FavoritesScreen()));
+            },
+            icon: menuIcon),
+      ],
     );
   }
 
