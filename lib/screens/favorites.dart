@@ -42,7 +42,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         children: <Widget>[
           Container(
             padding: const EdgeInsets.all(30),
-            child: Text('<River Name>',
+            child: Text('Tigris River',
                 style: TextStyle(
                     color: Colors.blue,
                     fontWeight: FontWeight.w500,
@@ -59,21 +59,48 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               padding: const EdgeInsets.all(20),
               alignment: Alignment.topCenter,
               child: Column(children: const [
-                Text('Max: ',
+                Text('Max: 7132 cms',
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 18)),
-                Text('Mean: ',
+                Text('Mean: 6734 cms',
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
                         fontSize: 18))
               ]),
             ),
-          ])
+          ]),
+          _futureDayRow("Monday"),
+          _futureDayRow("Tuesday"),
+          _futureDayRow("Wednesday"),
+          _futureDayRow("Thursday"),
+          _futureDayRow("Friday"),
+          _futureDayRow("Saturday"),
+          _futureDayRow("Sunday"),
         ],
       )),
     );
+  }
+
+  Widget _futureDayRow(String day) {
+    return Container(
+        padding: const EdgeInsets.all(10),
+        margin: EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: const Color.fromARGB(256, 256, 256, 256),
+            border: Border.all(style: BorderStyle.solid),
+            borderRadius: BorderRadius.circular(10)),
+        child: Row(
+          children: [
+            Text(day + ": ",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18)),
+          ],
+        ));
   }
 }
