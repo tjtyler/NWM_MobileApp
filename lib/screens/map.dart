@@ -49,7 +49,7 @@ class _MyMapScreenState extends State<MyMapScreen> {
     setState(() {
       _sessionToken ??= uuid.v4();
     });
-    String kPLACES_API_KEY = "AIzaSyAZbG9wTZbKpju3qk-rid9JlusNkfO2L2M";
+    String kPLACES_API_KEY = "AIzaSyCqEP3AT-g_PHsDbLjfYeNca64JAUNbm3Y";
     String type = '(regions)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';

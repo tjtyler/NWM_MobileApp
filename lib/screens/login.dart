@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'map.dart';
 
+// https://cloud.google.com/identity-platform/docs/sign-in-user-email
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 

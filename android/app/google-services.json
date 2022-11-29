@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "311090793664",
+    "project_id": "nwm-test-370017",
+    "storage_bucket": "nwm-test-370017.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311090793664:android:ed1a151a64d5cfc1863125",
+        "android_client_info": {
+          "package_name": "com.example.nwm_river_forecast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311090793664-qubfv6p4js1bl7ka5h3172l3gkeg2f2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHTs_jMyhfKPP1ntOwI_MEHXLeTT9bHk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311090793664-qubfv6p4js1bl7ka5h3172l3gkeg2f2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
