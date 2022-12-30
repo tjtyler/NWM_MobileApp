@@ -29,6 +29,13 @@
             {
               "client_id": "311090793664-qubfv6p4js1bl7ka5h3172l3gkeg2f2q.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "311090793664-gakfku016ft4r0rb1ev7cq4pjuaoeoed.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nwmRiverForecast"
+              }
             }
           ]
         }

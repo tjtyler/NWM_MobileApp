@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'map.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // https://cloud.google.com/identity-platform/docs/sign-in-user-email
 class LoginScreen extends StatefulWidget {
@@ -12,6 +13,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isLoggedIn = false;
+  late GoogleSignInAccount _userObj;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Widget build(BuildContext context) {
