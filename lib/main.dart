@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nwm_river_forecast/screens/test_login.dart';
-import 'screens/login.dart';
+import 'package:nwm_river_forecast/screens/map.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: TestLogin(),
+        body: MyMapScreen(),
       ),
     );
   }

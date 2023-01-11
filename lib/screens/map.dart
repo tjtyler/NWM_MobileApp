@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nwm_river_forecast/location_services.dart';
-import 'package:nwm_river_forecast/main.dart';
 import 'package:nwm_river_forecast/screens/favorites.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
